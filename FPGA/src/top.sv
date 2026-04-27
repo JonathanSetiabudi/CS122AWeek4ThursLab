@@ -17,14 +17,15 @@ module top (
 
     // Sample MOSI on SCLK rising edge (SPI mode 0). Reset byte alignment when CS deasserts.
     always @(posedge sclk or posedge cs_n) begin
-        if(cs_n == 1'b1) begin
-            bit_count <= 3'b000;
+        if(cs_n) begin
+            bit_count <= 0;
+            shift_reg <= 0;
         end else begin
             shift_reg <= {shift_reg[6:0], mosi};
             bit_count <= bit_count + 1;
-            if (bit_count == 3'b111) begin
+            if (bit_count == 3'd7) begin
                 // Master transmits nibble in data[7:4], so capture those 4 bits.
-                leds <= shift_reg[6:3];
+                leds <= shift_reg[7:4];
             end
         end
     end

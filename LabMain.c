@@ -54,9 +54,9 @@ void spi_send_to_fpga(uint8_t bits)
 {
     uint8_t data = (bits & 0x0F) << 4;
     gpio_put(SPI_CS_FPGA, 0);
-    // sleep_us(5);
+    sleep_us(1);
     spi_write_blocking(SPI_PORT, &data, 1);
-    // sleep_us(5);
+    sleep_us(1);
     gpio_put(SPI_CS_FPGA, 1);
 }
 
