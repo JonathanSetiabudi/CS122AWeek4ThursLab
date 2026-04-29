@@ -52,16 +52,17 @@ void update_leds(uint8_t bits)
 
 void spi_send_to_fpga(uint8_t bits) 
 {
-    uint8_t data = (bits & 0x0F) << 4;
+    uint8_t data = (bits & 0x0F);
     gpio_put(SPI_CS_FPGA, 0);
-    sleep_us(1);
+    sleep_us(2);
     spi_write_blocking(SPI_PORT, &data, 1);
-    sleep_us(1);
+    sleep_us(2);
     gpio_put(SPI_CS_FPGA, 1);
 }
 
 void setup_spi_master() {
-    spi_init(SPI_PORT, 1000000);
+    // Start slower for signal-integrity/timing margin during lab bring-up.
+    spi_init(SPI_PORT, 250);
     gpio_set_function(SPI_CLK_PIN, GPIO_FUNC_SPI);
     gpio_set_function(SPI_MOSI_PIN, GPIO_FUNC_SPI);
     spi_set_format(SPI_PORT, 8, SPI_CPOL_0, SPI_CPHA_0, SPI_MSB_FIRST);
@@ -119,8 +120,8 @@ int main()
                 pattern1_index = (pattern1_index + 1) % PATTERN1_LEN;
                 
             }
-            update_leds(val >> 4);
-            spi_send_to_fpga(val & 0x0F);
+            update_leds(val);
+            spi_send_to_fpga(val >> 4);
         }
             
         sleep_ms(10);

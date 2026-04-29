@@ -1,0 +1,8 @@
+set_io clk 6
+set_io cs_n 45
+set_io sclk 43
+set_io mosi 38
+set_io leds[0] 23
+set_io leds[1] 26
+set_io leds[2] 28
+set_io leds[3] 32
